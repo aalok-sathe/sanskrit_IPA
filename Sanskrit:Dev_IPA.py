@@ -6,7 +6,7 @@ license =\
     consistent, rule-based, orthography in Devanagari, particularly Sanskrit,
     to the International Phonetic Alphabet (IPA).
 	
-    Copyright (C) 2017 Aalok S.
+    Copyright (C) 2017 Aalok Sathe
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -62,19 +62,22 @@ Please make sure you've entered the correct path." % path)
 		toTranscribe = ""	# The string to be transcribed to IPA
 		if len(arg):
 			toTranscribe = arg
+			#print(toTranscribe)
 		else:
 			try:
 				inFile = open(self.inPath, 'r')
 				toTranscribe = inFile.read()
 				if self.outPath == None:
-					self.outPath = self.inPath + "_SanskritToIPA.out"
+					self.outPath = str(self.inPath) + "_SanskritToIPA.out"
 			except IOError:
 				print("Error: unable to read input from file %s"%self.inPath)
 		for c in toTranscribe:
-			if ! checkChar(c):
-				raise Exception("Invalid character: %s"%str(c))
-		d[toTranscribe] = transcribe(toTranscribe)
-		return d.get(toTranscribe, "Error: could not transcribe. Please report a bug.")
+			#print(str(c))
+			if not checkChar(c):
+				#raise Exception("Invalid character: %s"%str(c))
+				print("Potential invalid character found! Will be ignored: %s"%str(c))
+		self.transDict[toTranscribe] = transcribe(toTranscribe)
+		print(self.transDict.get(toTranscribe, "Error: could not transcribe. Please report a bug."))
 	
 	def do_exit(self, arg):
 		"""Exits the program."""
