@@ -99,6 +99,3 @@ if __name__ == '__main__':
     This program comes with ABSOLUTELY NO WARRANTY.
     This is free software, and you are welcome to redistribute it
     under certain conditions. Use "showLicence" to see the license.''')
-    
-    
-    
