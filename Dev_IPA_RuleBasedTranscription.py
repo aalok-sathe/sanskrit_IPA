@@ -17,7 +17,7 @@ def transcribe(string):
 	charIndex = 0
 	
 	
-	while True:
+	while False:#True:
 	
 		try :
 			c = string[charIndex]
