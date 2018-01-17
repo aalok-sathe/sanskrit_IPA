@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 
-
+#class Dev_IPA_RuleBasedTranscription:
+	
 def transcribe(string):
 	"""Transcribes the Sanskrit devanagari text in the input into IPA, i.e., the
 		International Phonetic Alphabet"""
@@ -143,34 +144,35 @@ def transcribe(string):
 ####################################################
 
 	vowelB = vowelA = 0
-	lastLength = 0
+	vowelB = getNextVowelIndex(transText, -1)['index']
+	lastLength = getNextVowelIndex(transText, -1)['length']
+	vowelB += lastLength
+	
+	print(transText)
 	
 	while False:
-		vowelB = vowelA
-		vowelA = getNextVowelIndex(transText, vowelA)['index']
-		lastLength = getNextVowelIndex(transText, vowelA)['length']
+		vowelA = getNextVowelIndex(transText, vowelB)['index']
+		lastLength = getNextVowelIndex(transText, vowelB)['length']
+		clusterComponents = []
+		print (vowelB,vowelA,lastLength)
 		
-		print (vowelA,vowelB)
-		
-		if vowelA == None :
-			try :
-				vowelA = getNextVowelIndex(transText, 1+vowelA)['index']
-				lastLength = getNextVowelIndex(transText, 1+vowelA)['length']
-			except Exception :
-				break
+		if vowelA == None or vowelB == None :
+			break
 			
-		if vowelA and vowelB :
-			clusterComponents = []
-			cluster = transText[vowelA+1 : vowelB]
+		if vowelA :#and vowelB :
 			
+			cluster = transText[vowelB+1 : vowelA]
+			print(cluster)
 			for charIndex in range(len(cluster)) :
 				if not cluster[charIndex] in "'͡ʃʰʱː̪" :
 					clusterComponents.append(cluster[charIndex])
 				else :
 					clusterComponents[len(clusterComponents)-1] += cluster[charIndex]
 			print (clusterComponents)
+		else :
+			break
 			
-		#break
+		vowelB = vowelA+lastLength
 	
 ####################################################
 ########	Return transcribed text	################
@@ -187,8 +189,8 @@ def getNextVowelIndex(ipaString, currentIndex) :
 	"""Returns index of the first vowel after, excluding, current index"""
 	for index in range(1+currentIndex,len(ipaString)) :
 		for iterator in range(5) :
-			if ipaString[index:index+1+iterator] in vowels.values() :
-				return {'index' : index, 'length' : 1 + iterator}
+			if ipaString[index:index+1+5-iterator] in vowels.values() :
+				return {'index' : index, 'length' : 1 + 5 - iterator}
 	return {'index' : None, 'length' : None}
 	
 ################################################
