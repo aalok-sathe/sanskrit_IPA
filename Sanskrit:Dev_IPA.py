@@ -93,12 +93,16 @@ Please make sure you've entered the correct path." % path)
     	
 if __name__ == '__main__':
     prompt = Transcriber(license)
-    prompt.prompt = ':: '
-    prompt.cmdloop('''
+    prompt.prompt = '> '
+    try:
+    	prompt.cmdloop('''
     SanskritIPA. Copyright (C) 2017  Aalok S.
     This program comes with ABSOLUTELY NO WARRANTY.
     This is free software, and you are welcome to redistribute it
     under certain conditions. Use "showLicence" to see the license.''')
+    except KeyboardInterrupt :
+    	print("\nExiting due to KeyboardInterrupt")
+    	raise SystemExit
     
     
     
