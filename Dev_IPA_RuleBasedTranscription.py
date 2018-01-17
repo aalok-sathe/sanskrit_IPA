@@ -1,7 +1,6 @@
 #! /usr/bin/env python3
 
-#class Dev_IPA_RuleBasedTranscription:
-	
+
 def transcribe(string):
 	"""Transcribes the Sanskrit devanagari text in the input into IPA, i.e., the
 		International Phonetic Alphabet"""
