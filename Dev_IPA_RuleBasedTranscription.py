@@ -142,33 +142,40 @@ def transcribe(string):
 ####################################################
 ########	Begin new block for syllabification	####
 ####################################################
-
+	
+	'''
+	print(transText)
+	d = {}
+	for i in range(len(transText)):
+		d[i] = str(transText[i])
+	print(d)
+	'''
+	
 	vowelB = vowelA = 0
 	vowelB = getNextVowelIndex(transText, -1)['index']
 	lastLength = getNextVowelIndex(transText, -1)['length']
 	vowelB += lastLength
-	
-	print(transText)
-	
-	while False:
+		
+	while True:
 		vowelA = getNextVowelIndex(transText, vowelB)['index']
 		lastLength = getNextVowelIndex(transText, vowelB)['length']
 		clusterComponents = []
-		print (vowelB,vowelA,lastLength)
+		
+		#print (vowelB,vowelA,lastLength)
 		
 		if vowelA == None or vowelB == None :
 			break
-			
+		
 		if vowelA :#and vowelB :
 			
-			cluster = transText[vowelB+1 : vowelA]
-			print(cluster)
+			cluster = transText[vowelB : vowelA]
+			#print(cluster)
 			for charIndex in range(len(cluster)) :
 				if not cluster[charIndex] in "'͡ʃʰʱː̪" :
 					clusterComponents.append(cluster[charIndex])
 				else :
 					clusterComponents[len(clusterComponents)-1] += cluster[charIndex]
-			print (clusterComponents)
+			#print (clusterComponents)
 		else :
 			break
 			
@@ -189,8 +196,8 @@ def getNextVowelIndex(ipaString, currentIndex) :
 	"""Returns index of the first vowel after, excluding, current index"""
 	for index in range(1+currentIndex,len(ipaString)) :
 		for iterator in range(5) :
-			if ipaString[index:index+1+5-iterator] in vowels.values() :
-				return {'index' : index, 'length' : 1 + 5 - iterator}
+			if ipaString[index:index+1+4-iterator] in set(vowels.values()).union({' '}) - {'əm', 'əh'} :
+				return {'index' : index, 'length' : 1 + 4 - iterator}
 	return {'index' : None, 'length' : None}
 	
 ################################################
