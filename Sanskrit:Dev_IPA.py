@@ -69,8 +69,8 @@ Please make sure you've entered the correct path." % path)
 				toTranscribe = inFile.read()
 				if self.outPath == None:
 					self.outPath = str(self.inPath) + "_SanskritToIPA.out"
-			except IOError:
-				print("Error: unable to read input from file %s"%self.inPath)
+			except Exception:
+				print("Error: unable to read input from file '%s'"%self.inPath)
 		for c in toTranscribe:
 			#print(str(c))
 			if not checkChar(c):
@@ -99,3 +99,6 @@ if __name__ == '__main__':
     This program comes with ABSOLUTELY NO WARRANTY.
     This is free software, and you are welcome to redistribute it
     under certain conditions. Use "showLicence" to see the license.''')
+    
+    
+    
