@@ -75,7 +75,7 @@ Please make sure you've entered the correct path." % path)
 			#print(str(c))
 			if not checkChar(c):
 				#raise Exception("Invalid character: %s"%str(c))
-				print("Potential invalid character found! Will be ignored: %s"%str(c))
+				print("Potential invalid character found: %s. May be ignored."%repr(c))
 		self.transDict[toTranscribe] = transcribe(toTranscribe)
 		print(self.transDict.get(toTranscribe, "Error: could not transcribe. Please report a bug."))
 	
@@ -103,6 +103,3 @@ if __name__ == '__main__':
     except KeyboardInterrupt :
     	print("\nExiting due to KeyboardInterrupt")
     	raise SystemExit
-    
-    
-    
