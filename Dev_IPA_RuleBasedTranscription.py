@@ -1,7 +1,24 @@
 #! /usr/bin/env python3
 
-#class Dev_IPA_RuleBasedTranscription:
+license =\
+'''
+    This program is intended for transcription, of any compatible, phonetically
+    consistent, rule-based, orthography in Devanagari, particularly Sanskrit,
+    to the International Phonetic Alphabet (IPA).
 	
+    Copyright (C) 2017 Aalok Sathe
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details. https://www.gnu.org/licenses/	
+'''
+
 def transcribe(string):
 	"""Transcribes the Sanskrit devanagari text in the input into IPA, i.e., the
 		International Phonetic Alphabet"""
@@ -259,7 +276,7 @@ def charInRange(c):
 	upper = int('0x97f', 16)
 	"""Set of Devanagari characters that are not used in Sanskrit-Dev orthography"""
 	exclude = {'0x900', '0x904', '0x90e', '0x912', '0x929', '0x931', '0x934', '0x93a', '0x93b', '0x93c', '0x946', '0x94e', '0x94f', '0x94a', '0x951', '0x952', '0x953', '0x954', '0x955', '0x956', '0x957', '0x958', '0x959', '0x95a', '0x95b', '0x95c', '0x95d', '0x95e', '0x95f', '0x973', '0x974', '0x975', '0x976', '0x977', '0x978', '0x979', '0x97a', '0x97b', '0x97c', '0x97f', '0x97d', '0x97e', '0x970', '0x971'}
-	return (o >= lower and o <= upper) and not (hex(o) in exclude)
+	return c == ' ' or ((o >= lower and o <= upper) and not (hex(o) in exclude))
 	
 ########################################################
 ########	Correspondence tables to be referred to	####
