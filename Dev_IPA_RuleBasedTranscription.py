@@ -140,25 +140,25 @@ def transcribe(string):
 		#print(transText + '\n')
 		
 ####################################################
+########	Modified string for syllabification	####
+########	and stress assignment	################
+		
+		altTransText = '.'
+		
+####################################################
 ########	Begin new block for syllabification	####
 ####################################################
 	
-	'''
-	print(transText)
-	d = {}
-	for i in range(len(transText)):
-		d[i] = str(transText[i])
-	print(d)
-	'''
-	
 	vowelB = vowelA = 0
 	vowelB = getNextVowelIndex(transText, -1)['index']
-	lastLength = getNextVowelIndex(transText, -1)['length']
+	length = lastLength = getNextVowelIndex(transText, -1)['length']
 	vowelB += lastLength
-		
+	
+	prevSyllBreak = 0
+	
 	while True:
 		vowelA = getNextVowelIndex(transText, vowelB)['index']
-		lastLength = getNextVowelIndex(transText, vowelB)['length']
+		length = getNextVowelIndex(transText, vowelB)['length']
 		clusterComponents = []
 		
 		#print (vowelB,vowelA,lastLength)
@@ -166,26 +166,72 @@ def transcribe(string):
 		if vowelA == None or vowelB == None :
 			break
 		
-		if vowelA :#and vowelB :
+		#if vowelA :#and vowelB :
 			
-			cluster = transText[vowelB : vowelA]
-			#print(cluster)
-			for charIndex in range(len(cluster)) :
-				if not cluster[charIndex] in "'͡ʃʰʱː̪" :
-					clusterComponents.append(cluster[charIndex])
-				else :
-					clusterComponents[len(clusterComponents)-1] += cluster[charIndex]
-			#print (clusterComponents)
+		cluster = transText[vowelB : vowelA]
+		#print(cluster)
+		for charIndex in range(len(cluster)) :
+			if not cluster[charIndex] in "'͡ʃʰʱː̪" :
+				clusterComponents.append(cluster[charIndex])
+			else :
+				clusterComponents[len(clusterComponents)-1] += cluster[charIndex]
+		
+		print (transText[vowelB-lastLength:vowelB])
+		
+		altTransText += transText[vowelB-lastLength:vowelB]
+		
+		print (clusterComponents)
+		
+		if len(clusterComponents) == 1 :
+			# do not mark stress because len() == 1
+			prevSyllBreak = len(altTransText)
+			if len(altTransText) : altTransText += '.' + clusterComponents[0]
+			else : altTransText += clusterComponents[0]
+		elif len(clusterComponents) == 2 :
+			if len(altTransText) and clusterComponents[0] not in {'ŋ', 'ɲ', 'ɳ', 'n', 'm',} and altTransText[len(altTransText)-1] != '̃' :
+				altTransText = altTransText[:prevSyllBreak+1] + 'ˈ' + altTransText[1+prevSyllBreak:]
+			#^mark stress
+			prevSyllBreak = len(altTransText) + 1
+			altTransText += clusterComponents[0] + '.' + clusterComponents[1]
+		elif len(clusterComponents) == 3 :
+			if (clusterComponents[2] in {'j', 'ɹ',}) :
+				if len(altTransText) and clusterComponents[0] not in {'ŋ', 'ɲ', 'ɳ', 'n', 'm',} and altTransText[len(altTransText)-1] != '̃' :
+					altTransText = altTransText[:prevSyllBreak+1] + 'ˈ' + altTransText[1+prevSyllBreak:]
+				#^mark stress
+				prevSyllBreak = len(altTransText) + 1
+				altTransText += clusterComponents[0] + '.' + clusterComponents[1] + clusterComponents[2]
+			elif (clusterComponents[0] in stops.values()) and (clusterComponents[1] in stops.values()) :
+				if len(altTransText) and clusterComponents[0] not in {'ŋ', 'ɲ', 'ɳ', 'n', 'm',} and altTransText[len(altTransText)-1] != '̃' :
+					altTransText = altTransText[:prevSyllBreak+1] + 'ˈ' + altTransText[1+prevSyllBreak:]
+				#^mark stress
+				prevSyllBreak = len(altTransText) + 1
+				altTransText += clusterComponents[0] + '.' + clusterComponents[1] + clusterComponents[2]
+			else :
+				if len(altTransText) and clusterComponents[0] not in {'ŋ', 'ɲ', 'ɳ', 'n', 'm',} and altTransText[len(altTransText)-1] != '̃' :
+					altTransText = altTransText[:prevSyllBreak+1] + 'ˈ' + altTransText[1+prevSyllBreak:]
+				#^mark stress
+				prevSyllBreak = len(altTransText) + 2
+				altTransText += clusterComponents[0] + clusterComponents[1] + '.' + clusterComponents[2]				
 		else :
-			break
+			if len(altTransText) and clusterComponents[0] not in {'ŋ', 'ɲ', 'ɳ', 'n', 'm',} and altTransText[len(altTransText)-1] != '̃' :
+				altTransText = altTransText[:prevSyllBreak+1] + 'ˈ' + altTransText[1+prevSyllBreak:]
+			for i in range(len(clusterComponents)) : altTransText += clusterComponents[i]
 			
-		vowelB = vowelA+lastLength
+		vowelB = vowelA+length
+		lastLength = length
+		
+	altTransText += transText[vowelB-lastLength:]
+	
+####################################################
+########	Begin block for stress assignment	####
+####################################################
+
 	
 ####################################################
 ########	Return transcribed text	################
 ####################################################	
 		
-	return transText
+	return altTransText[1:] #+ "\n" + transText
 	
 ####################################################
 ########	Helper function to find position of	####
@@ -196,7 +242,7 @@ def getNextVowelIndex(ipaString, currentIndex) :
 	"""Returns index of the first vowel after, excluding, current index"""
 	for index in range(1+currentIndex,len(ipaString)) :
 		for iterator in range(5) :
-			if ipaString[index:index+1+4-iterator] in set(vowels.values()).union({' '}) - {'əm', 'əh'} :
+			if ipaString[index:index+1+4-iterator] in set(vowels.values()).union({None}) - {'əm', 'əh'} :
 				return {'index' : index, 'length' : 1 + 4 - iterator}
 	return {'index' : None, 'length' : None}
 	
@@ -229,7 +275,7 @@ mapping = {
 	'उ' : 'u', 'ु' : 'u',
 	'ऊ' : 'uː', 'ू' : 'uː',
 	'ऋ' : 'ɹ̩', 'ॠ' : 'ɹ̩ː', 'ृ' : 'ɹ̩', 'ॄ' : 'ɹ̩ː',
-	'ऌ' : 'l̩', 'ॢ' : 'l̩', 'ॡ' : 'l̩ː',
+	'ऌ' : 'l̩', 'ॢ' : 'l̩', 'ॡ' : 'l̩ː', 'ॣ' : 'l̩ː',
 	'ए' : 'eː', 'े' : 'eː',
 	'ऐ' : 'əi', 'ै' : 'əi',
 	'ओ' : 'oː', 'ो' : 'oː',
@@ -263,6 +309,7 @@ mapping = {
 	' ' : ' ', '\n' : '\n', '\t' : '\t', '\r' : '\n', '.' : '.', '।' : '।',
 	'ESCAPE' : {
 		'\n' : '\n', '\t' : '\t', '\r' : '\n', '.' : '.', '।' : '।', 'NASAL' : 'm',
+		'॥' : '॥',
 	}
 }
 
@@ -282,7 +329,7 @@ vowels = {
 	'उ' : 'u', 'ु' : 'u',
 	'ऊ' : 'uː', 'ू' : 'uː',
 	'ऋ' : 'ɹ̩', 'ॠ' : 'ɹ̩ː', 'ृ' : 'ɹ̩', 'ॄ' : 'ɹ̩ː',
-	'ऌ' : 'l̩', 'ॢ' : 'l̩', 'ॡ' : 'l̩ː',
+	'ऌ' : 'l̩', 'ॢ' : 'l̩', 'ॡ' : 'l̩ː', 'ॣ' : 'l̩ː',
 	'ए' : 'eː', 'े' : 'eː',
 	'ऐ' : 'əi', 'ै' : 'əi',
 	'ओ' : 'oː', 'ो' : 'oː',
@@ -294,15 +341,15 @@ vowels = {
 longVowels = {
 	'ा' : 'ɑː', 'ी' : 'iː', 'ू' : 'uː', 'ॄ' : 'ɹ̩ː',
 	'े' : 'eː', 'ै' : 'əi', 'ो' : 'oː', 'ाै' : 'əu',
-	'ः' : 'əh', 'ं' : 'əm',
+	'ः' : 'əh', 'ं' : 'əm', 'ॣ' : 'l̩ː',
 }
 
 stops = {
-	'क' : 'kə', 'ख' : 'kʰə', 'ग' : 'gə', 'घ' : 'gʰə', #'ङ' : 'ŋə',
-	'च' : 't͡ʃə', 'छ' : 't͡ʃʰə', 'ज' : 'd͡ʒə', 'झ' : 'd͡ʒʱə', #'ञ' : 'ɲə',
-	'ट' : 'ʈə', 'ठ' : 'ʈʰə', 'ड' : 'ɖə', 'ढ' : 'ɖʰə', #'ण' : 'ɳə',
-	'त' : 't̪ə', 'थ' : 't̪ʰə', 'द' : 'd̪ə', 'ध' : 'd̪ʰə', #'न' : 'nə',
-	'प' : 'pə', 'फ' : 'pʰə', 'ब' : 'bə', 'भ' : 'bʱə', #'म' : 'mə',
+	'क' : 'k', 'ख' : 'kʰ', 'ग' : 'g', 'घ' : 'gʰ', #'ङ' : 'ŋə',
+	'च' : 't͡ʃ', 'छ' : 't͡ʃʰ', 'ज' : 'd͡ʒ', 'झ' : 'd͡ʒʱ', #'ञ' : 'ɲə',
+	'ट' : 'ʈ', 'ठ' : 'ʈʰ', 'ड' : 'ɖ', 'ढ' : 'ɖʰ', #'ण' : 'ɳə',
+	'त' : 't̪', 'थ' : 't̪ʰ', 'द' : 'd̪', 'ध' : 'd̪ʰ', #'न' : 'nə',
+	'प' : 'p', 'फ' : 'pʰ', 'ब' : 'b', 'भ' : 'bʱ', #'म' : 'mə',
 }
 
 sonority = {
