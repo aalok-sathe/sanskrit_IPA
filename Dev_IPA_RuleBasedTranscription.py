@@ -201,37 +201,42 @@ def transcribe(string):
 		
 		if len(clusterComponents) == 1 :
 			# do not mark stress because len() == 1
-			prevSyllBreak = len(altTransText)
+			prevSyllBreak = len(altTransText) + int(' ' in clusterComponents)
 			if len(altTransText) : altTransText += '.' + clusterComponents[0]
 			else : altTransText += clusterComponents[0]
 		elif len(clusterComponents) == 2 :
-			if len(altTransText) and clusterComponents[0] not in {'ŋ', 'ɲ', 'ɳ', 'n', 'm',} and altTransText[len(altTransText)-1] != '̃' :
-				altTransText = altTransText[:prevSyllBreak+1] + 'ˈ' + altTransText[1+prevSyllBreak:]
+			if len(altTransText) and clusterComponents[0] not in {'ŋ', 'ɲ', 'ɳ', 'n', 'm',} :
+				if altTransText[len(altTransText)-1] != '̃' and (lastLength == 1 or altTransText[len(altTransText)-1] == '̩') :
+					altTransText = altTransText[:prevSyllBreak+1] + 'ˈ' + altTransText[1+prevSyllBreak:]
 			#^mark stress
-			prevSyllBreak = len(altTransText) + 1
+			prevSyllBreak = len(altTransText) + 1 + int(' ' in clusterComponents)
 			altTransText += clusterComponents[0] + '.' + clusterComponents[1]
 		elif len(clusterComponents) == 3 :
 			if (clusterComponents[2] in {'j', 'ɹ',}) :
-				if len(altTransText) and clusterComponents[0] not in {'ŋ', 'ɲ', 'ɳ', 'n', 'm',} and altTransText[len(altTransText)-1] != '̃' :
-					altTransText = altTransText[:prevSyllBreak+1] + 'ˈ' + altTransText[1+prevSyllBreak:]
+				if len(altTransText) and clusterComponents[0] not in {'ŋ', 'ɲ', 'ɳ', 'n', 'm',} :
+					if altTransText[len(altTransText)-1] != '̃' and (lastLength == 1 or altTransText[len(altTransText)-1] == '̩') :
+						altTransText = altTransText[:prevSyllBreak+1] + 'ˈ' + altTransText[1+prevSyllBreak:]
 				#^mark stress
-				prevSyllBreak = len(altTransText) + 1
+				prevSyllBreak = len(altTransText) + 1 + int(' ' in clusterComponents)
 				altTransText += clusterComponents[0] + '.' + clusterComponents[1] + clusterComponents[2]
 			elif (clusterComponents[0] in stops.values()) and (clusterComponents[1] in stops.values()) :
-				if len(altTransText) and clusterComponents[0] not in {'ŋ', 'ɲ', 'ɳ', 'n', 'm',} and altTransText[len(altTransText)-1] != '̃' :
-					altTransText = altTransText[:prevSyllBreak+1] + 'ˈ' + altTransText[1+prevSyllBreak:]
+				if len(altTransText) and clusterComponents[0] not in {'ŋ', 'ɲ', 'ɳ', 'n', 'm',} :
+					if altTransText[len(altTransText)-1] != '̃' and (lastLength == 1 or altTransText[len(altTransText)-1] == '̩') :
+						altTransText = altTransText[:prevSyllBreak+1] + 'ˈ' + altTransText[1+prevSyllBreak:]
 				#^mark stress
-				prevSyllBreak = len(altTransText) + 1
+				prevSyllBreak = len(altTransText) + 1 + int(' ' in clusterComponents)
 				altTransText += clusterComponents[0] + '.' + clusterComponents[1] + clusterComponents[2]
 			else :
-				if len(altTransText) and clusterComponents[0] not in {'ŋ', 'ɲ', 'ɳ', 'n', 'm',} and altTransText[len(altTransText)-1] != '̃' :
-					altTransText = altTransText[:prevSyllBreak+1] + 'ˈ' + altTransText[1+prevSyllBreak:]
+				if len(altTransText) and clusterComponents[0] not in {'ŋ', 'ɲ', 'ɳ', 'n', 'm',} :
+					if altTransText[len(altTransText)-1] != '̃' and (lastLength == 1 or altTransText[len(altTransText)-1] == '̩') :
+						altTransText = altTransText[:prevSyllBreak+1] + 'ˈ' + altTransText[1+prevSyllBreak:]
 				#^mark stress
-				prevSyllBreak = len(altTransText) + 2
+				prevSyllBreak = len(altTransText) + 2 + int(' ' in clusterComponents)
 				altTransText += clusterComponents[0] + clusterComponents[1] + '.' + clusterComponents[2]				
 		else :
-			if len(altTransText) and clusterComponents[0] not in {'ŋ', 'ɲ', 'ɳ', 'n', 'm',} and altTransText[len(altTransText)-1] != '̃' :
-				altTransText = altTransText[:prevSyllBreak+1] + 'ˈ' + altTransText[1+prevSyllBreak:]
+			if len(altTransText) and clusterComponents[0] not in {'ŋ', 'ɲ', 'ɳ', 'n', 'm',} :
+				if altTransText[len(altTransText)-1] != '̃' and (lastLength == 1 or altTransText[len(altTransText)-1] == '̩') :
+					altTransText = altTransText[:prevSyllBreak+1] + 'ˈ' + altTransText[1+prevSyllBreak:]
 			for i in range(len(clusterComponents)) : altTransText += clusterComponents[i]
 			
 		vowelB = vowelA+length
@@ -298,7 +303,7 @@ mapping = {
 	'ओ' : 'oː', 'ो' : 'oː',
 	'अाै' : 'əu', 'ाै' : 'əu',
 	'अं' : 'əm', 'ं' : 'əm',
-	'अः' : 'əh', 'ः' : 'əh',
+	'अः' : 'əx', 'ः' : 'əx',
 	'VOWELS' : {
 		'ा' : 'ɑː',
 		'ि' : 'i',	'ी' : 'iː',
@@ -306,7 +311,7 @@ mapping = {
 		'ृ' : 'ɹ̩', 'ॄ' : 'ɹ̩ː', 'ॢ' : 'l̩',
 		'े' : 'eː', 'ै' : 'əi',
 		'ो' : 'oː', 'ाै' : 'əu',
-		'ः' : 'əh', 'ं' : 'əm',
+		'ः' : 'əx', 'ं' : 'əm',
 	},
 	'क' : 'kə', 'ख' : 'kʰə', 'ग' : 'gə', 'घ' : 'gʰə', 'ङ' : 'ŋə',
 	'VELAR' : {'क' : 'kə', 'ख' : 'kʰə', 'ग' : 'gə', 'घ' : 'gʰə', 'NASAL' : 'ŋ',},
@@ -352,13 +357,13 @@ vowels = {
 	'ओ' : 'oː', 'ो' : 'oː',
 	'अाै' : 'əu', 'ाै' : 'əu',
 	'अं' : 'əm', 'ं' : 'əm',
-	'अः' : 'əh', 'ः' : 'əh',
+	'अः' : 'əx', 'ः' : 'əx',
 }
 
 longVowels = {
 	'ा' : 'ɑː', 'ी' : 'iː', 'ू' : 'uː', 'ॄ' : 'ɹ̩ː',
 	'े' : 'eː', 'ै' : 'əi', 'ो' : 'oː', 'ाै' : 'əu',
-	'ः' : 'əh', 'ं' : 'əm', 'ॣ' : 'l̩ː',
+	'ः' : 'əx', 'ं' : 'əm', 'ॣ' : 'l̩ː',
 }
 
 stops = {
