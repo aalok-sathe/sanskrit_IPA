@@ -2,7 +2,7 @@
 
 Usage:
   To start up the application command prompt, do:
-  python3 Sanskrit\:Dev_IPA.py
+  python3 init.py
   
   Commands:
   1. transcribe [text]
