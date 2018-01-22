@@ -16,7 +16,8 @@ license =\
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details. https://www.gnu.org/licenses/	
+    GNU General Public License for more details.
+    https://www.gnu.org/licenses
 '''
 
 from cmd import Cmd
@@ -96,7 +97,7 @@ if __name__ == '__main__':
     prompt.prompt = '> '
     try:
     	prompt.cmdloop('''
-    SanskritIPA. Copyright (C) 2017  Aalok S.
+    SanskritIPA. Copyright (C) 2017-2018  Aalok S.
     This program comes with ABSOLUTELY NO WARRANTY.
     This is free software, and you are welcome to redistribute it
     under certain conditions. Use "showLicence" to see the license.''')
