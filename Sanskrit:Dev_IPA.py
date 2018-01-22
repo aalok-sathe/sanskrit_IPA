@@ -6,7 +6,7 @@ license =\
     consistent, rule-based, orthography in Devanagari, particularly Sanskrit,
     to the International Phonetic Alphabet (IPA).
 	
-    Copyright (C) 2017 Aalok Sathe
+    Copyright (C) 2017-2018 Aalok Sathe
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
