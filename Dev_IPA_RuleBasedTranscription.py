@@ -136,7 +136,9 @@ def transcribe(string):
 		
 		altTransText += transText[vowelB-lastLength:vowelB]
 		
-		#print (clusterComponents)
+		print (clusterComponents)
+		
+		stress_exclude_set = {'ŋ', 'ɲ', '.ɳ', 'n', 'm',}
 		
 		if len(clusterComponents) == 1 :
 			# do not mark stress because len() == 1
@@ -144,7 +146,7 @@ def transcribe(string):
 			if len(altTransText) : altTransText += '.' + clusterComponents[0]
 			else : altTransText += clusterComponents[0]
 		elif len(clusterComponents) == 2 :
-			if len(altTransText) and clusterComponents[0] not in {'ŋ', 'ɲ', 'ɳ', 'n', 'm',} :
+			if len(altTransText) and clusterComponents[0] not in stress_exclude_set.union({' '}) :
 				if altTransText[len(altTransText)-1] != '̃' and (lastLength == 1 or altTransText[len(altTransText)-1] == '̩') :
 					#altTransText = altTransText[:prevSyllBreak+1] + 'ˈ' + altTransText[1+prevSyllBreak:]
 					for i in range(1,10) :
@@ -159,7 +161,7 @@ def transcribe(string):
 			altTransText += clusterComponents[0] + '.' + clusterComponents[1]
 		elif len(clusterComponents) == 3 :
 			if (clusterComponents[2] in {'j', 'ɹ',}) :
-				if len(altTransText) and clusterComponents[0] not in {'ŋ', 'ɲ', 'ɳ', 'n', 'm',} :
+				if len(altTransText) and clusterComponents[0] not in stress_exclude_set :
 					if altTransText[len(altTransText)-1] != '̃' and (lastLength == 1 or altTransText[len(altTransText)-1] == '̩') :
 						#altTransText = altTransText[:prevSyllBreak+1] + 'ˈ' + altTransText[1+prevSyllBreak:]
 						for i in range(1,10) :
@@ -173,7 +175,7 @@ def transcribe(string):
 				prevSyllBreak = len(altTransText) + 1 + int(' ' in clusterComponents)
 				altTransText += clusterComponents[0] + '.' + clusterComponents[1] + clusterComponents[2]
 			elif (clusterComponents[0] in stops.values()) and (clusterComponents[1] in stops.values()) :
-				if len(altTransText) and clusterComponents[0] not in {'ŋ', 'ɲ', 'ɳ', 'n', 'm',} :
+				if len(altTransText) and clusterComponents[0] not in stress_exclude_set :
 					if altTransText[len(altTransText)-1] != '̃' and (lastLength == 1 or altTransText[len(altTransText)-1] == '̩') :
 						#altTransText = altTransText[:prevSyllBreak+1] + 'ˈ' + altTransText[1+prevSyllBreak:]
 						for i in range(1,10) :
@@ -187,7 +189,7 @@ def transcribe(string):
 				prevSyllBreak = len(altTransText) + 1 + int(' ' in clusterComponents)
 				altTransText += clusterComponents[0] + '.' + clusterComponents[1] + clusterComponents[2]
 			else :
-				if len(altTransText) and clusterComponents[0] not in {'ŋ', 'ɲ', 'ɳ', 'n', 'm',} :
+				if len(altTransText) and clusterComponents[0] not in stress_exclude_set :
 					if altTransText[len(altTransText)-1] != '̃' and (lastLength == 1 or altTransText[len(altTransText)-1] == '̩') :
 						#altTransText = altTransText[:prevSyllBreak+1] + 'ˈ' + altTransText[1+prevSyllBreak:]
 						for i in range(1,10) :
@@ -201,7 +203,7 @@ def transcribe(string):
 				prevSyllBreak = len(altTransText) + 2 + int(' ' in clusterComponents)
 				altTransText += clusterComponents[0] + clusterComponents[1] + '.' + clusterComponents[2]				
 		else :
-			if len(altTransText) and clusterComponents[0] not in {'ŋ', 'ɲ', 'ɳ', 'n', 'm',} :
+			if len(altTransText) and clusterComponents[0] not in stress_exclude_set :
 				if altTransText[len(altTransText)-1] != '̃' and (lastLength == 1 or altTransText[len(altTransText)-1] == '̩') :
 					#altTransText = altTransText[:prevSyllBreak+1] + 'ˈ' + altTransText[1+prevSyllBreak:]
 					for i in range(1,10) :
