@@ -23,6 +23,8 @@ def transcribe(string):
 	"""Transcribes the Sanskrit devanagari text in the input into IPA, i.e., the
 		International Phonetic Alphabet"""
 		
+	#print(string)
+		
 	transText = str()
 	string = 'अ' + string
 	
@@ -99,134 +101,144 @@ def transcribe(string):
 ########	Modified string for syllabification	####
 ########	and stress assignment	################
 		
+	
 	altTransText = '.'
 		
 ####################################################
 ########	Begin new block for syllabification	####
 ####################################################
 	
-	vowelB = vowelA = 0
-	vowelB = getNextVowelIndex(transText, -1)['index']
-	length = lastLength = getNextVowelIndex(transText, -1)['length']
-	vowelB += lastLength
-	#print (vowelB,vowelA,lastLength)
-	prevSyllBreak = 0
+	try:
 	
-	while vowelA != None and vowelB != None :
-		vowelA = getNextVowelIndex(transText, vowelB)['index']
-		length = getNextVowelIndex(transText, vowelB)['length']
-		clusterComponents = []
-		
+		vowelB = vowelA = 0
+		vowelB = getNextVowelIndex(transText, -1)['index']
+		length = lastLength = getNextVowelIndex(transText, -1)['length']
+		vowelB += lastLength
 		#print (vowelB,vowelA,lastLength)
-		
-		if vowelA == None or vowelB == None :
-			break
-		
-		#if vowelA :#and vowelB :
-			
-		cluster = transText[vowelB : vowelA]
-		#print(cluster)
-		for charIndex in range(len(cluster)) :
-			if (len(cluster) == 1) or (not cluster[charIndex] in "'͡ʃʰʱː̪ʒɕʑ") :
-				clusterComponents.append(cluster[charIndex])
-			else :
-				clusterComponents[len(clusterComponents)-1] += cluster[charIndex]
-		
-		#print (transText[vowelB-lastLength:vowelB])
-		
-		altTransText += transText[vowelB-lastLength:vowelB]
-		
-		print (clusterComponents)
-		
-		stress_exclude_set = {'ŋ', 'ɲ', '.ɳ', 'n', 'm',}
-		
-		if len(clusterComponents) == 1 :
-			# do not mark stress because len() == 1
-			prevSyllBreak = len(altTransText) + int(' ' in clusterComponents)
-			if len(altTransText) : altTransText += '.' + clusterComponents[0]
-			else : altTransText += clusterComponents[0]
-		elif len(clusterComponents) == 2 :
-			if len(altTransText) and clusterComponents[0] not in stress_exclude_set.union({' '}) :
-				if altTransText[len(altTransText)-1] != '̃' and (lastLength == 1 or altTransText[len(altTransText)-1] == '̩') :
-					#altTransText = altTransText[:prevSyllBreak+1] + 'ˈ' + altTransText[1+prevSyllBreak:]
-					for i in range(1,10) :
-						try :
-							periodIndex = len(altTransText)-i+altTransText[-i:].index('.')
-							altTransText = altTransText[:periodIndex+1] + 'ˈ' + altTransText[periodIndex+1:]
-							break
-						except ValueError :
-							pass
-			#^mark stress
-			prevSyllBreak = len(altTransText) + 1 + int(' ' in clusterComponents)
-			altTransText += clusterComponents[0] + '.' + clusterComponents[1]
-		elif len(clusterComponents) == 3 :
-			if (clusterComponents[2] in {'j', 'ɹ',}) :
-				if len(altTransText) and clusterComponents[0] not in stress_exclude_set :
-					if altTransText[len(altTransText)-1] != '̃' and (lastLength == 1 or altTransText[len(altTransText)-1] == '̩') :
-						#altTransText = altTransText[:prevSyllBreak+1] + 'ˈ' + altTransText[1+prevSyllBreak:]
-						for i in range(1,10) :
-							try :
-								periodIndex = len(altTransText)-i+altTransText[-i:].index('.')
-								altTransText = altTransText[:periodIndex+1] + 'ˈ' + altTransText[periodIndex+1:]
-								break
-							except ValueError :
-								pass
-				#^mark stress
-				prevSyllBreak = len(altTransText) + 1 + int(' ' in clusterComponents)
-				altTransText += clusterComponents[0] + '.' + clusterComponents[1] + clusterComponents[2]
-			elif (clusterComponents[0] in stops.values()) and (clusterComponents[1] in stops.values()) :
-				if len(altTransText) and clusterComponents[0] not in stress_exclude_set :
-					if altTransText[len(altTransText)-1] != '̃' and (lastLength == 1 or altTransText[len(altTransText)-1] == '̩') :
-						#altTransText = altTransText[:prevSyllBreak+1] + 'ˈ' + altTransText[1+prevSyllBreak:]
-						for i in range(1,10) :
-							try :
-								periodIndex = len(altTransText)-i+altTransText[-i:].index('.')
-								altTransText = altTransText[:periodIndex+1] + 'ˈ' + altTransText[periodIndex+1:]
-								break
-							except ValueError :
-								pass
-				#^mark stress
-				prevSyllBreak = len(altTransText) + 1 + int(' ' in clusterComponents)
-				altTransText += clusterComponents[0] + '.' + clusterComponents[1] + clusterComponents[2]
-			else :
-				if len(altTransText) and clusterComponents[0] not in stress_exclude_set :
-					if altTransText[len(altTransText)-1] != '̃' and (lastLength == 1 or altTransText[len(altTransText)-1] == '̩') :
-						#altTransText = altTransText[:prevSyllBreak+1] + 'ˈ' + altTransText[1+prevSyllBreak:]
-						for i in range(1,10) :
-							try :
-								periodIndex = len(altTransText)-i+altTransText[-i:].index('.')
-								altTransText = altTransText[:periodIndex+1] + 'ˈ' + altTransText[periodIndex+1:]
-								break
-							except ValueError :
-								pass
-				#^mark stress
-				prevSyllBreak = len(altTransText) + 2 + int(' ' in clusterComponents)
-				altTransText += clusterComponents[0] + clusterComponents[1] + '.' + clusterComponents[2]				
-		else :
-			if len(altTransText) and clusterComponents[0] not in stress_exclude_set :
-				if altTransText[len(altTransText)-1] != '̃' and (lastLength == 1 or altTransText[len(altTransText)-1] == '̩') :
-					#altTransText = altTransText[:prevSyllBreak+1] + 'ˈ' + altTransText[1+prevSyllBreak:]
-					for i in range(1,10) :
-						try :
-							periodIndex = len(altTransText)-i+altTransText[-i:].index('.')
-							altTransText = altTransText[:periodIndex+1] + 'ˈ' + altTransText[periodIndex+1:]
-							break
-						except ValueError :
-							pass
-			for i in range(len(clusterComponents)) : altTransText += clusterComponents[i]
-			
-		vowelB = vowelA+length
-		lastLength = length
-		
-	altTransText += transText[vowelB-lastLength:]
+		prevSyllBreak = 0
 	
+		while vowelA != None and vowelB != None :
+			vowelA = getNextVowelIndex(transText, vowelB)['index']
+			length = getNextVowelIndex(transText, vowelB)['length']
+			clusterComponents = []
+		
+			#print (vowelB,vowelA,lastLength)
+		
+			if vowelA == None or vowelB == None :
+				break
+		
+			#if vowelA :#and vowelB :
+			
+			cluster = transText[vowelB : vowelA]
+			#print(cluster)
+			for charIndex in range(len(cluster)) :
+				if (len(cluster) == 1) or (not cluster[charIndex] in "'͡ʃʰʱː̪ʒɕʑ") :
+					clusterComponents.append(cluster[charIndex])
+				else :
+					clusterComponents[len(clusterComponents)-1] += cluster[charIndex]
+		
+			#print (transText[vowelB-lastLength:vowelB])
+		
+			altTransText += transText[vowelB-lastLength:vowelB]
+		
+			#print (clusterComponents)
+		
+			stress_exclude_set = {'ŋ', 'ɲ', '.ɳ', 'n', 'm',}
+		
+			if len(clusterComponents) == 1 :
+				# do not mark stress because len() == 1
+				prevSyllBreak = len(altTransText) + int(' ' in clusterComponents)
+				if len(altTransText) : altTransText += '.' + clusterComponents[0]
+				else : altTransText += clusterComponents[0]
+			elif len(clusterComponents) == 2 :
+				if len(altTransText) and clusterComponents[0] not in stress_exclude_set.union({' '}) :
+					if altTransText[len(altTransText)-1] != '̃' and (lastLength == 1 or altTransText[len(altTransText)-1] == '̩') :
+						#altTransText = altTransText[:prevSyllBreak+1] + 'ˈ' + altTransText[1+prevSyllBreak:]
+						for i in range(1,10) :
+							try :
+								periodIndex = len(altTransText)-i+altTransText[-i:].index('.')
+								altTransText = altTransText[:periodIndex+1] + 'ˈ' + altTransText[periodIndex+1:]
+								break
+							except ValueError :
+								pass
+				#^mark stress
+				prevSyllBreak = len(altTransText) + 1 + int(' ' in clusterComponents)
+				altTransText += clusterComponents[0] + '.' + clusterComponents[1]
+			elif len(clusterComponents) == 3 :
+				if (clusterComponents[2] in {'j', 'ɹ',}) :
+					if len(altTransText) and clusterComponents[0] not in stress_exclude_set :
+						if altTransText[len(altTransText)-1] != '̃' and (lastLength == 1 or altTransText[len(altTransText)-1] == '̩') :
+							#altTransText = altTransText[:prevSyllBreak+1] + 'ˈ' + altTransText[1+prevSyllBreak:]
+							for i in range(1,10) :
+								try :
+									periodIndex = len(altTransText)-i+altTransText[-i:].index('.')
+									altTransText = altTransText[:periodIndex+1] + 'ˈ' + altTransText[periodIndex+1:]
+									break
+								except ValueError :
+									pass
+					#^mark stress
+					prevSyllBreak = len(altTransText) + 1 + int(' ' in clusterComponents)
+					altTransText += clusterComponents[0] + '.' + clusterComponents[1] + clusterComponents[2]
+				elif (clusterComponents[0] in stops.values()) and (clusterComponents[1] in stops.values()) :
+					if len(altTransText) and clusterComponents[0] not in stress_exclude_set :
+						if altTransText[len(altTransText)-1] != '̃' and (lastLength == 1 or altTransText[len(altTransText)-1] == '̩') :
+							#altTransText = altTransText[:prevSyllBreak+1] + 'ˈ' + altTransText[1+prevSyllBreak:]
+							for i in range(1,10) :
+								try :
+									periodIndex = len(altTransText)-i+altTransText[-i:].index('.')
+									altTransText = altTransText[:periodIndex+1] + 'ˈ' + altTransText[periodIndex+1:]
+									break
+								except ValueError :
+									pass
+					#^mark stress
+					prevSyllBreak = len(altTransText) + 1 + int(' ' in clusterComponents)
+					altTransText += clusterComponents[0] + '.' + clusterComponents[1] + clusterComponents[2]
+				else :
+					if len(altTransText) and clusterComponents[0] not in stress_exclude_set :
+						if altTransText[len(altTransText)-1] != '̃' and (lastLength == 1 or altTransText[len(altTransText)-1] == '̩') :
+							#altTransText = altTransText[:prevSyllBreak+1] + 'ˈ' + altTransText[1+prevSyllBreak:]
+							for i in range(1,10) :
+								try :
+									periodIndex = len(altTransText)-i+altTransText[-i:].index('.')
+									altTransText = altTransText[:periodIndex+1] + 'ˈ' + altTransText[periodIndex+1:]
+									break
+								except ValueError :
+									pass
+					#^mark stress
+					prevSyllBreak = len(altTransText) + 2 + int(' ' in clusterComponents)
+					altTransText += clusterComponents[0] + clusterComponents[1] + '.' + clusterComponents[2]				
+			else :
+				if len(altTransText) and clusterComponents[0] not in stress_exclude_set :
+					if altTransText[len(altTransText)-1] != '̃' and (lastLength == 1 or altTransText[len(altTransText)-1] == '̩') :
+						#altTransText = altTransText[:prevSyllBreak+1] + 'ˈ' + altTransText[1+prevSyllBreak:]
+						for i in range(1,10) :
+							try :
+								periodIndex = len(altTransText)-i+altTransText[-i:].index('.')
+								altTransText = altTransText[:periodIndex+1] + 'ˈ' + altTransText[periodIndex+1:]
+								break
+							except ValueError :
+								pass
+				for i in range(len(clusterComponents)) : altTransText += clusterComponents[i]
+			
+			vowelB = vowelA+length
+			lastLength = length
+		
+		altTransText += transText[vowelB-lastLength:]
+	
+			
 ####################################################
 ########	End block for stress assignment	########
 ####################################################
 ########	Return transcribed text	################
 ####################################################	
 		
-	return altTransText[3:] #+ "\n" + transText
+		return altTransText[3:] #+ "\n" + transText
+		
+	except Exception as e:
+		#print("Unexpected error:", e, "while processing", string, transText)
+		altTransText = transText[1:]
+		
+		return altTransText
 	
 ####################################################
 ########	Helper function to find position of	####
