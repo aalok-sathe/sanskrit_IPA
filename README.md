@@ -1,5 +1,6 @@
-# sanskrit_IPA
 [![DOI](https://zenodo.org/badge/115088812.svg)](https://zenodo.org/badge/latestdoi/115088812)
+
+# sanskrit_IPA 
 
 Usage:
   To start up the application command prompt, do:
