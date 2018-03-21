@@ -22,8 +22,8 @@ license =\
 
 from cmd import Cmd
 import os
-from Dev_IPA_RuleBasedTranscription import transcribe
-from Dev_IPA_RuleBasedTranscription import charInRange as checkChar
+from transcriber_data import transcribe
+from transcriber_data import charInRange as checkChar
 
 class Transcriber(Cmd):
 	
