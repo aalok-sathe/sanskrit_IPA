@@ -1,0 +1,405 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Jacobs Landscape Poster
+% LaTeX Template
+% Version 1.1 (14/06/14)
+%
+% Created by:
+% Computational Physics and Biophysics Group, Jacobs University
+% https://teamwork.jacobs-university.de:8443/confluence/display/CoPandBiG/LaTeX+Poster
+% 
+% Further modified by:
+% Nathaniel Johnston (nathaniel@njohnston.ca)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[final]{beamer}
+
+\usepackage[scale=1.1,size=a0]{beamerposter} % Use the beamerposter package for laying out the poster
+
+
+
+\usetheme{confposter} % Use the confposter theme supplied with this template
+
+\usepackage{tikz}
+\usepackage{xltxtra}
+\usepackage{calc}
+\usepackage{color}
+\usepackage{fontspec}
+
+\usetikzlibrary{positioning,calc}
+
+\newlength{\mylength}
+
+\usepackage{multirow, makecell}
+\usepackage{tablefootnote}
+\usepackage{tabularx}
+\usepackage{tipa}
+\let\ipa\textipa
+\usepackage{vowel,amssymb}
+\usepackage{soul}
+\usepackage[ruled]{algorithm2e}
+
+\setmainfont{FreeSerif}
+\usefonttheme{serif}
+
+\usepackage{polyglossia}
+\setmainlanguage{english}
+\setotherlanguages{sanskrit} %% or other languages
+\newfontfamily\devanagarifont[Script=Devanagari]{Annapurna SIL}
+\newcommand{\sansk}[1]{\begin{sanskrit}#1\end{sanskrit}}  % Dummy command; does not do anything
+
+
+
+\settowidth\rotheadsize{Minimal}
+\newcommand{\rot}[1]{\rotatebox{90}{#1}}
+\newcommand{\multirot}[1]{\multirow{2}{*}{\rot{#1}}}
+
+\setbeamercolor{block title}{fg=dblue\iffalse ngreen\fi,bg=white} % Colors of the block titles
+\setbeamercolor{block body}{fg=black,bg=white} % Colors of the body of blocks
+\setbeamercolor{block alerted title}{fg=white,bg=dblue!70} % Colors of the highlighted block titles
+\setbeamercolor{block alerted body}{fg=black,bg=dblue!10} % Colors of the body of highlighted blocks
+% Many more colors are available for use in beamerthemeconfposter.sty
+
+%-----------------------------------------------------------
+% Define the column widths and overall poster size
+% To set effective sepwid, onecolwid and twocolwid values, first choose how many columns you want and how much separation you want between columns
+% In this template, the separation width chosen is 0.024 of the paper width and a 4-column layout
+% onecolwid should therefore be (1-(# of columns+1)*sepwid)/# of columns e.g. (1-(4+1)*0.024)/4 = 0.22
+% Set twocolwid to be (2*onecolwid)+sepwid = 0.464
+% Set threecolwid to be (3*onecolwid)+2*sepwid = 0.708
+
+\newlength{\sepwid}
+\newlength{\onecolwid}
+\newlength{\twocolwid}
+\newlength{\threecolwid}
+%\setlength{\paperwidth}{142cm} % A0 width: 46.8in
+%\setlength{\paperheight}{86cm} % A0 height: 33.1in
+\setlength{\sepwid}{0.024\paperwidth} % Separation width (white space) between columns
+\setlength{\onecolwid}{0.22\paperwidth} % Width of one column
+\setlength{\twocolwid}{0.464\paperwidth} % Width of two columns
+\setlength{\threecolwid}{0.708\paperwidth} % Width of three columns
+\setlength{\topmargin}{-0.9in} % Reduce the top margin size
+%-----------------------------------------------------------
+
+\usepackage{graphicx}  % Required for including images
+
+\usepackage{booktabs} % Top and bottom rules for tables
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION 
+%----------------------------------------------------------------------------------------
+
+\title{A rule-based system for the transcription of Sanskrit from Devanagari to IPA} % Poster title
+\author{Aalok Sathe} % Author(s)
+
+\institute{
+	University of Richmond
+	} % Institution(s)
+
+%----------------------------------------------------------------------------------------
+%	BEGIN DOCUMENT
+%
+
+\begin{document}
+
+\addtobeamertemplate{block end}{}{\vspace*{2ex}} % White space under blocks
+\addtobeamertemplate{block alerted end}{}{\vspace*{2ex}} % White space under highlighted (alert) blocks
+%\addtobeamertemplate{frametitle}{}{\vspace{-7em}}
+
+%	UNIVERSITY ICON IN HEADER
+\addtobeamertemplate{headline}{} 
+{\begin{tikzpicture}[remember picture, overlay]
+	\node [anchor=north west, inner sep=1.5cm]  at ($(current page.north west) + (1,-1)$)
+	{\includegraphics[scale=.15]{UR-Icon}};
+	\end{tikzpicture}} % Logo next to the title
+\addtobeamertemplate{headline}{}
+
+\setlength{\belowcaptionskip}{1ex} % White space under figures
+\setlength\belowdisplayshortskip{2ex} 
+% White space under equations
+
+\begin{frame}[t] % The whole poster is enclosed in one beamer frame
+%\vskip-2.9em
+
+%   ALL COLUMNS GO HERE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+        \begin{columns}[t]  % to split into three columns
+
+
+            \begin{column}{\sepwid}\end{column} % Empty spacer column
+
+            \begin{column}{\twocolwid} % The first column, two columns wide
+
+                %----------------------------------------------------------------------------------------
+                %	ABSTRACT
+                %----------------------------------------------------------------------------------------
+
+
+                \setbeamercolor{block alerted body}{fg=black,bg=blue!5}
+                \begin{alertblock}{Abstract}
+                
+                    %\sffamily
+                    We propose a system for the transcription of Sanskrit text written using the Devanagari orthography,
+                    into the International Phonetic Alphabet, and supplement it with free and open-source software.
+                    We make use of existing literature on closest known pronunciations of sounds as well as prosodic
+                    and metric rules of syllabification using the Weerasinghe-Wasala-Gamage (WWG) algorithm for Sinhala,
+                    adapted to Sanskrit. We further incorporate suprasegmental sound changes along with the assignment of
+                    syllable-weight-determined stress.
+
+                \end{alertblock}
+
+                %----------------------------------------------------------------------------------------
+
+	
+                %	SANSKRIT PHONOLOGY
+
+                \setbeamercolor{block alerted title}{fg=black,bg=blue!7}
+                \setbeamercolor{block alerted body}{fg=black,bg=blue!7}
+                %\setbeamerfont{block alerted body}{family=\fontspec{FreeSerif}}
+                %\setbeamerfont{block alerted title}{family=\fontspec{FreeSerif}}
+                
+                \begin{block}{Phonological considerations}
+                
+                    \begin{itemize}
+                    
+                        \item {\bfseries Shorthand for nasalization}
+                            
+                            Nasals may be one of six types: five, derived from
+                            the conventional places of articulation (velar, palatal,
+                            retroflex, dental, and labial), and the sixth, simply a
+                            nasalized articulation of any vowel.
+                            Conventionally, a nasal consonant is only explicitly
+                            written when a phrase ends, or if the upcoming character is a vowel.
+                            In case the nasal sound is not explicitly shown, an {\it anusvara}
+                            is shown on the character preceding it, and the actual sound
+                            corresponding to it is inferred from the forthcoming sound at the time of reading.
+                        
+                            \sansk{संस्कृत} $\rightarrow$ ([\textbf{sə̃̃s}.kɹ̩.t̪ə]);\quad
+                            \sansk{अंक} $\rightarrow$ ([\textbf{əŋ}.kə])
+                        
+                        \item {\bfseries Default schwa}
+                        
+                            A consonant character in Devanagari Sanskrit, unless explicitly
+                            marked {\it halant} (i.e., a schwa-less ``partial'' sound marked
+                            using the diacritic \sansk{्}), has an implied schwa. For instance,
+                            \sansk{ग} may be transcribed as [ɡə], while to yield [ɡ], we would
+                            need to mark a lack of schwa as \sansk{ग्}.
+                        
+                        \item {\bfseries Syllabification}
+                        
+                    \end{itemize}
+                    
+                \end{block} % end PHONOLOGICAL considerations
+                
+                    %   TABLE 2: CONSONANTS
+                    
+	                \begin{table}[ht]
+                        \centering
+                        
+                        \begin{center}
+                            \begin{tabular}{|l|c|c|c|c|c|c|c|}
+                                
+                                \hline
+                                & \textbf{Vl. plosive }&\textbf{Vl. aspirated }&\textbf{Vd. plosive }
+                                &\textbf{Vd. aspirated }&\textbf{Nasal}&
+                                \textbf{Approximant}&\multicolumn{1}{c|}{\textbf{Fricative}}\\
+                                & \textbf{}&\textbf{ plosive}&\textbf{ }&\textbf{ plosive}&\textbf{}&&
+                                \\
+                                
+                                \hline
+                                Glottal&&&&&&&ह \quad  [ɦə]$^{**}$\\	\hline
+                                Velar&क \quad[kə]	&ख \quad [kʰə]&	ग \quad [gə]&	घ \quad [gʰə]& ङ \quad [ŋə]&&\\\hline
+                                Palatal& च \quad [t͡ɕə]&	छ \quad  [t͡ɕʰə]& ज \quad  [d͡ʑə]&	झ \quad  [d͡ʑʱə]& ञ \quad  [ɲə]&य \quad  [jə]&
+                                \multirow{2}{*}{श \quad  [ɕə]}\\\cline{1-7}
+                                \multirow{2}{*}{Alveolar}&&&&&&र \quad  [ɹə]&\\\cline{8-8}
+                                &&&&&&ल  \quad [lə]$^*$&स \quad  [sə]\\\hline
+                                Retroflex& ट \quad  [ʈə]&	ठ \quad  [ʈʰə]& 	ड \quad  [ɖə]& ढ \quad  [ɖʰə]&	ण \quad  [ɳə]&ळ \quad  [ɭə]$^*$&ष \quad  [ʂə]\\\hline
+                                Dental& त \quad  [t̪ə]& 	थ \quad  [t̪ʰə]&	द \quad  [d̪ə]&		ध \quad  [d̪ʰə]& न \quad  [nə]&\multirow{2}{*}{व \quad  [ʋə]}&\\\cline{1-6}\cline{8-8}
+                                Labial & प \quad  [pə]& 	फ \quad  [pʰə]& ब \quad  [bə]& 	भ \quad  [bʱə]& म \quad  [mə]&&\\\hline
+                                
+                                %\multicolumn{6}{c}{ }\\\hline
+                                
+                                %\multicolumn{6}{|c|}{\textbf{Other sounds}}\\\hline\hline
+                                %Approximants& & && &\\\hline Fricatives&& & 	& 	&\\\hline&
+                                %&\multicolumn{4}{c|}{ }	%'क्ष' \quad  'kʂə', 	'ज्ञ' \quad  'd͡ʒɲə', 	'त्र' \quad  't̪ɹə'}
+                                %\\\hline
+                            \end{tabular}
+                            \vskip.5em
+                            \caption{\ Sanskrit speech sounds in Devanagari: consonants and
+                            non-vowel sounds. Merged cells indicate shared place of articulation.
+                                %Orientation of table is so as to align it with conventional Sanskrit speech sounds arrangement. 
+                                $^*$Lateral approximants. $^{**}$Voiced fricative.}
+                            \label{consonants-table}
+                        \end{center}
+                        %\label{cons}
+                    \end{table}
+                   
+	
+                	
+            \end{column}        % end first column (two cols wide)
+
+            \begin{column}{\sepwid}\end{column} % Empty spacer column
+
+
+            \begin{column}{\onecolwid}      % begin second column (only one col wide)
+	
+
+                %	EXAMPLE STIMULI
+
+                \setbeamercolor{block alerted body}{fg=black,} % Change the alert block body colors
+                    %   TABLE 1: VOWELS AND SYLLABIC SOUNDS
+                    
+                    \begin{table}[ht]
+	                    \centering
+		
+	                    \begin{center}
+		                    \begin{tabular}{|c|c|c||c|c|c|}
+			                    \hline
+			                    \textbf{Base}&\multirow{1}{*}{\textbf{Diacritic}}&
+			                    \multirow{1}{*}{\textbf{IPA}}&\textbf{Base} &\multirow{1}{*}{\textbf{Diacritic}}&
+			                    \multirow{1}{*}{\textbf{IPA}} \\
+			                    \hline
+			                    \sansk{अ}&&ə& \sansk{आ}& \sansk{ा}&ɑː\\\hline
+			                    \sansk{इ}& \sansk{ि}&i&	\sansk{ई}& \sansk{ी}&iː\\\hline
+			                    \sansk{उ}&\sansk{ ु}&u&
+			                    \sansk{ऊ}& \sansk{ ू}&uː\\\hline
+			                    \sansk{ऋ}&\sansk{ ृ}&ɹ̩&\sansk{ॠ} &\sansk{ ॄ}&ɹ̩ː\\\hline
+			                    \sansk{ऌ}&\sansk{	ॢ}&l̩&\sansk{ॡ} &\sansk{ॣ}&l̩ː\\\hline
+			                    \sansk{ए}&\sansk{ े}&eː& \sansk{ऐ} & \sansk{	ै}&ɑːi\\\hline
+			                    \sansk{ओ}& 	\sansk{ो }&oː&	\sansk{	अाै}&\sansk{ाै}&  ɑːu\\\hline
+			                    \sansk{अं}& \sansk{	ं }&əm&	\sansk{अः}&	\sansk{ः} & əh\\\hline
+			                    \sansk{ॐ} &&oːm&&&%\multicolumn{3}{|c|}{ }
+			                    \\\hline
+			                    
+		                    \end{tabular}
+		                    \vskip.5em
+		                    \caption{\ Sanskrit speech sounds: vowels and syllabic sounds.}
+		                    \label{vowels-table}
+		                    
+	                    \end{center}
+                    \end{table} %   end VOWELS/SYLLABIC SOUNDS table
+
+                
+                \setbeamercolor{block alerted title}{fg=black,bg=blue!7}
+                \setbeamercolor{block alerted body}{fg=black,bg=blue!7}
+                \begin{alertblock}{Algorithm}
+                    \begin{algorithm}[H]
+	                    \label{alg1}
+	                    \SetAlgoLined
+	                    \KwIn{Sanskrit text to be syllabified}
+	                    \texttt{initialize} scope at the beginning of text\;
+	                    \While{end of text not reached}{
+		                    \texttt{move} to next $V_B\mathbb{C}V_A$, where $\mathbb{C}$ is a consonant cluster\;
+		                    \uIf{length of cluster $\mathbb{C} = 1$}{
+			                    \texttt{mark} syllable break after $V_B$\;
+		                    }\uElseIf{length of cluster $\mathbb{C} = 2$}{\texttt{mark}
+		                    syllable break after first $C$ from left\;}\uElseIf{length of cluster $\mathbb{C} = 3$}{
+			                    \uIf{third consonant from left $=$ \sansk{र् or य्} {\bf or} first
+			                    and second consonants are stops}{\texttt{mark} syllable break after first $C$ from left\;}
+			                    \Else{\texttt{mark} syllable break before first $C$ from right\;}
+		                    }\Else{
+			                    \uIf{first consonant from right $=$ \sansk{र् or य्}}{\texttt{mark}
+			                    syllable break before second $C$ from right\;}
+			                    \Else{\texttt{mark} syllable break after least sonorous $C$\;}
+			                    }
+	                    }\KwResult{Syllabified Sanskrit text
+	                    %\vskip0.5em
+	                    }
+	                \NoCaptionOfAlgo
+                    \caption{\bfseries WWG Algorithm adapted to Sanskrit}
+                    \end{algorithm}
+                
+                \end{alertblock}
+
+            \end{column}        % End of the second column
+
+            \begin{column}{\sepwid}\end{column} % Empty spacer column
+
+            \begin{column}{\onecolwid} % The third column
+
+
+                %	FUTURE RESEARCH
+
+                \setbeamercolor{block alerted title}{fg=black,bg=blue!7}
+                \setbeamercolor{block alerted body}{fg=black,bg=blue!7}
+                
+                \begin{alertblock}{Future exploration}
+
+                    content
+
+                \end{alertblock}
+
+                %----------------------------------------------------------------------------------------
+                %	REFERENCES
+                %----------------------------------------------------------------------------------------
+
+                \begin{block}{References}
+
+                    % \nocite{*} % Insert publications even if they are not cited in the poster
+                    \nocite{zieba2002original,weerasinghe2005rule,gdasa2013sanskritSyllabification}
+                    \small{\bibliographystyle{plain}
+                    \bibliography{sample}}
+
+                \end{block}
+
+                %----------------------------------------------------------------------------------------
+                %	ACKNOWLEDGEMENTS
+                %----------------------------------------------------------------------------------------
+
+                \setbeamercolor{block title}{fg=red,bg=white} % Change the block title color
+
+                \begin{block}{Acknowledgements}
+                      We are grateful for helpful comments by and discussion with Mukund Gokhale,
+                        Hema Kshirsagar, Dieter~Gunkel, Shardul~Chiplunkar, and Thomas Bonfiglio.
+                \end{block}\vskip.4em
+
+                %----------------------------------------------------------------------------------------
+                %	CONTACT INFORMATION
+                %----------------------------------------------------------------------------------------
+
+                \setbeamercolor{block alerted title}{fg=black,bg=norange} % Change the alert block title colors
+                \setbeamercolor{block alerted body}{fg=black,bg=white} % Change the alert block body colors
+
+                \begin{alertblock}{Contact information}
+
+                    \begin{itemize}
+                        \item Web: \href{https://github.com/aalok-sathe/sanskrit_IPA}{https://github.com/aalok-sathe/sanskrit\textunderscore IPA}
+                        \item Email: \href{mailto:aalok.sathe@richmond.edu}{aalok.sathe@richmond.edu}
+                    \end{itemize}
+
+                \end{alertblock}
+
+
+                %----------------------------------------------------------------------------------------
+
+            \end{column} % End of the third column
+
+            \begin{column}{\sepwid}\end{column}         % Empty spacer column
+            
+
+        \end{columns}       % End of group of three columns
+        
+        
+%   END COLUMNS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{frame} % End of the enclosing frame
+
+\end{document}
